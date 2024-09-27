@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://u765maylx2jb"
+path="res://.godot/imported/sb_tunnel.map-8212af511beab860d071b5ccfe76f4f9.tres"
+
+[deps]
+
+source_file="res://maps/sandbox/sb_tunnel.map"
+dest_files=["res://.godot/imported/sb_tunnel.map-8212af511beab860d071b5ccfe76f4f9.tres"]
+
+[params]
+

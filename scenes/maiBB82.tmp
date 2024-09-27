@@ -1,0 +1,143 @@
+[gd_scene load_steps=10 format=3 uid="uid://cd6pwha5qjedc"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_08hr3"]
+[ext_resource type="Texture2D" uid="uid://bq8salb1db6f" path="res://assets/shake_logo.png" id="2_x6sgm"]
+[ext_resource type="PackedScene" uid="uid://bx5hgspp6dlod" path="res://scenes/map_selection_button.tscn" id="3_muu50"]
+[ext_resource type="Texture2D" uid="uid://d1ghhfnecjtp4" path="res://assets/previews/sb_sandbox_preview.png" id="4_4f6p8"]
+[ext_resource type="PackedScene" uid="uid://dbu7ob7q77me" path="res://maps/sandbox/scenes/sb_sandbox.tscn" id="4_khxpu"]
+[ext_resource type="Texture2D" uid="uid://cc23o0eq1fbgw" path="res://assets/previews/sb_tunnel_preview.png" id="6_6i0kc"]
+[ext_resource type="PackedScene" uid="uid://bda78qyeyxgq0" path="res://maps/sandbox/scenes/sb_tunnel.tscn" id="6_agl7y"]
+
+[sub_resource type="Animation" id="Animation_0g2hh"]
+resource_name = "text_pulse"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("menu/title_text:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.5, 0.5), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mex3w"]
+_data = {
+"text_pulse": SubResource("Animation_0g2hh")
+}
+
+[node name="main_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_08hr3")
+
+[node name="menu" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="menu"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 259.0
+offset_top = 50.0
+offset_right = 866.0
+offset_bottom = 153.0
+texture = ExtResource("2_x6sgm")
+stretch_mode = 4
+
+[node name="singleplayer" type="Button" parent="menu"]
+layout_mode = 0
+offset_left = 406.0
+offset_top = 241.0
+offset_right = 709.0
+offset_bottom = 307.0
+text = "Singleplayer"
+
+[node name="multiplayer" type="Button" parent="menu"]
+layout_mode = 0
+offset_left = 406.0
+offset_top = 352.0
+offset_right = 709.0
+offset_bottom = 418.0
+text = "Multiplayer"
+
+[node name="Label" type="Label" parent="menu/multiplayer"]
+layout_mode = 0
+offset_left = 319.0
+offset_top = 15.0
+offset_right = 596.0
+offset_bottom = 49.0
+theme_override_font_sizes/font_size = 24
+text = "← coming soon (maybe)"
+
+[node name="title_text" type="Label" parent="menu"]
+self_modulate = Color(1, 1, 0.376471, 1)
+layout_mode = 0
+offset_left = 721.0
+offset_top = 127.0
+offset_right = 1016.0
+offset_bottom = 201.0
+rotation = -0.380482
+pivot_offset = Vector2(145.235, 35.155)
+theme_override_font_sizes/font_size = 32
+text = "Not Quake!
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_mex3w")
+}
+
+[node name="cam" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="way_points" type="Node2D" parent="."]
+
+[node name="level_selection" type="Node2D" parent="way_points"]
+position = Vector2(1152, 0)
+
+[node name="level_selection" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1152.0
+offset_right = 1152.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="levels" type="Node2D" parent="level_selection"]
+
+[node name="sb_sandbox" parent="level_selection/levels" instance=ExtResource("3_muu50")]
+offset_left = 46.0
+offset_top = 33.0
+offset_right = 302.0
+offset_bottom = 225.0
+icon = ExtResource("4_4f6p8")
+map_scene = ExtResource("4_khxpu")
+map_name = "sb_sandbox"
+
+[node name="map_selection_button" parent="level_selection/levels" instance=ExtResource("3_muu50")]
+offset_left = 347.0
+offset_top = 33.0
+offset_right = 611.0
+offset_bottom = 233.0
+icon = ExtResource("6_6i0kc")
+map_scene = ExtResource("6_agl7y")
+map_name = "sb_tunnel"
+
+[connection signal="pressed" from="menu/singleplayer" to="." method="_on_singleplayer_pressed"]

@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://b5grpdrqsf7gt"
+path="res://.godot/imported/castle1.map-6e1a9b97d7ed6f2599ad9105f55bf483.tres"
+
+[deps]
+
+source_file="res://maps/castle1.map"
+dest_files=["res://.godot/imported/castle1.map-6e1a9b97d7ed6f2599ad9105f55bf483.tres"]
+
+[params]
+

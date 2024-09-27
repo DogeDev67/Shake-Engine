@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://b82xtfc1axv71"]
+
+[ext_resource type="PackedScene" uid="uid://oucinakmgyks" path="res://assets/models/torch/scene.gltf" id="1_no273"]
+
+[node name="torch" type="StaticBody3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_no273")]
+transform = Transform3D(0.963003, 0.269491, 0, -0.269491, 0.963003, 0, 0, 0, 1, 0.309488, 0, 0)
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.717049, 1.52239, 0)
+amount = 100
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_max = 303.35
+scale_amount_min = 71.2
+scale_amount_max = 136.49
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.762539, 1.59433, 0)
+light_color = Color(1, 0.686275, 0.2, 1)
+light_energy = 4.0
+light_specular = 4.0
+omni_range = 50.0

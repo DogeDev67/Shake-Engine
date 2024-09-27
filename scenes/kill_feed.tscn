@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bifhaj5iybp4k"]
+
+[ext_resource type="Script" path="res://kill_feed.gd" id="1_icirn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_svbrr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_55qu2"]
+
+[node name="kill_feed" type="CanvasLayer"]
+script = ExtResource("1_icirn")
+
+[node name="killfeedwindow" type="RichTextLabel" parent="."]
+offset_right = 793.0
+offset_bottom = 87.0
+scale = Vector2(1.5, 1.5)
+mouse_filter = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_svbrr")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_55qu2")
+bbcode_enabled = true

@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://dslpongrjd87g"
+path="res://.godot/imported/water_tech_house2.map-92c9adfdbef9621af51ba0e2cc725e76.tres"
+
+[deps]
+
+source_file="res://maps/water_tech_house2.map"
+dest_files=["res://.godot/imported/water_tech_house2.map-92c9adfdbef9621af51ba0e2cc725e76.tres"]
+
+[params]
+

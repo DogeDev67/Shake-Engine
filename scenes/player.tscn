@@ -1,0 +1,214 @@
+[gd_scene load_steps=12 format=3 uid="uid://cynm6hh4vvv07"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_k80me"]
+[ext_resource type="Texture2D" uid="uid://b12gx2e7v4it0" path="res://assets/crosshair.png" id="2_kk2td"]
+[ext_resource type="ArrayMesh" uid="uid://2814sfs68e7w" path="res://assets/models/shotgun/shotgun.obj" id="3_rpwyd"]
+[ext_resource type="Texture2D" uid="uid://cwx70gfcc6crw" path="res://assets/shot.png" id="4_36ums"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_my2rg"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3kc7m"]
+
+[sub_resource type="Animation" id="Animation_kkppx"]
+resource_name = "shoot"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("head/cam/Shotgun:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.174533, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("head/cam/Shotgun:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.519015, -0.406, -1.203), Vector3(0.519, -0.25, -1.203), Vector3(0.519015, -0.406, -1.203)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("head/cam/Shotgun/Sprite3D:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0534906),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_dae6t"]
+resource_name = "hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("head/cam/crosshair:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0333333, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_b4rqy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("head/cam/crosshair:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mem3c"]
+_data = {
+"RESET": SubResource("Animation_b4rqy"),
+"hit": SubResource("Animation_dae6t"),
+"shoot": SubResource("Animation_kkppx")
+}
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3vb4l"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("head/cam:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("head/cam/Shotgun:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("username:text")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("username:modulate")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("head/flashlight:visible")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:kill_streak")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+
+[node name="player" type="CharacterBody3D" groups=["player"]]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+wall_min_slide_angle = 0.785398
+script = ExtResource("1_k80me")
+speed = 10.0
+
+[node name="head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.743705, -0.310824)
+
+[node name="cam" type="Camera3D" parent="head"]
+fov = 90.0
+
+[node name="crosshair" type="Sprite2D" parent="head/cam"]
+texture_filter = 1
+position = Vector2(576, 324)
+texture = ExtResource("2_kk2td")
+
+[node name="Shotgun" type="MeshInstance3D" parent="head/cam"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.519015, -0.406, -1.203)
+mesh = ExtResource("3_rpwyd")
+skeleton = NodePath("../../..")
+
+[node name="Sprite3D" type="Sprite3D" parent="head/cam/Shotgun"]
+transform = Transform3D(1.24333, 0, 0, 0, 1.24333, 0, 0, 0, 1.24333, -0.346, 0.095, -0.087)
+billboard = 1
+texture_filter = 0
+texture = ExtResource("4_36ums")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="head/cam/Shotgun/Sprite3D"]
+light_color = Color(1, 0.703962, 0.293268, 1)
+light_specular = 1.0
+shadow_enabled = true
+omni_range = 10.0
+
+[node name="gun_ray" type="RayCast3D" parent="head/cam" groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.454741)
+target_position = Vector3(0, 0, -400)
+collide_with_areas = true
+debug_shape_custom_color = Color(0.597176, 0.597176, 0.597176, 1)
+debug_shape_thickness = 5
+
+[node name="flashlight" type="SpotLight3D" parent="head"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.153005, -0.617916)
+visible = false
+light_energy = 4.0
+spot_range = 100.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["player"]]
+transform = Transform3D(0.999997, 0.000378214, -0.00256397, -0.000387307, 0.999994, -0.00355301, 0.00256261, 0.00355399, 0.99999, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_my2rg")
+
+[node name="body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_3kc7m")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_mem3c")
+}
+
+[node name="ui" type="Node2D" parent="."]
+visible = false
+
+[node name="ui" type="Control" parent="ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="health_bar" type="ProgressBar" parent="ui/ui"]
+self_modulate = Color(1, 0, 0, 1)
+layout_mode = 0
+offset_top = 621.0
+offset_right = 359.0
+offset_bottom = 648.0
+
+[node name="spawn_menu" type="Control" parent="ui/ui"]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="ui/ui/spawn_menu"]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 39.0
+offset_right = 1108.0
+offset_bottom = 623.0
+
+[node name="username" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35746, 0)
+pixel_size = 0.015
+billboard = 1
+no_depth_test = true
+text = "DogeDev gaming"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_3vb4l")

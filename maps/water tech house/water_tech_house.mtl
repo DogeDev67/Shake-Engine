@@ -1,0 +1,15 @@
+newmtl Metal/s2 Metal Grid 1 Holes
+map_Kd textures/Metal/s2 Metal Grid 1 Holes.png
+
+newmtl Metal/s2 Metal Grid 2
+map_Kd textures/Metal/s2 Metal Grid 2.png
+
+newmtl Metal/s2 Metal Grid 3 panels
+map_Kd textures/Metal/s2 Metal Grid 3 panels.png
+
+newmtl Roofing/s2 Roof Tile Grey
+map_Kd textures/Roofing/s2 Roof Tile Grey.png
+
+newmtl Water/s2 Water Blue Dark Trash
+map_Kd textures/Water/s2 Water Blue Dark Trash.png
+

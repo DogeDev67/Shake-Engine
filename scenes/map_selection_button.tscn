@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://bx5hgspp6dlod"]
+
+[ext_resource type="Texture2D" uid="uid://blrdnkfyvea06" path="res://assets/map_preview_NA.png" id="1_8hclh"]
+[ext_resource type="Script" path="res://scripts/map_selection_button.gd" id="2_8wxcf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aoqel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wt8x"]
+bg_color = Color(0, 0, 0, 0.737255)
+
+[node name="map_selection_button" type="Button"]
+offset_right = 264.0
+offset_bottom = 200.0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_aoqel")
+icon = ExtResource("1_8hclh")
+script = ExtResource("2_8wxcf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_top = 177.0
+offset_right = 264.0
+offset_bottom = 200.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wt8x")
+
+[node name="label_map_name" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 256.0
+offset_bottom = 23.0
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

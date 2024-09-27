@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://blpgicsmidtut"]
+
+[ext_resource type="PackedScene" uid="uid://dpptlv8lovjbr" path="res://scenes/following_enemy_template.tscn" id="1_pytqa"]
+
+[node name="fe_bean" instance=ExtResource("1_pytqa")]

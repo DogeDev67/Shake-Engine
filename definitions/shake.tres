@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="QodotFGDFile" load_steps=4 format=3 uid="uid://c51vnfixnsve3"]
+
+[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_file.gd" id="1_jqfxs"]
+[ext_resource type="Resource" uid="uid://c36hv0o6g0udo" path="res://addons/qodot/game_definitions/fgd/qodot_fgd.tres" id="1_w2g43"]
+[ext_resource type="Resource" uid="uid://ccwosedfa8v8d" path="res://addons/qodot/game_definitions/fgd/point_classes/light_point_class.tres" id="2_1di51"]
+
+[resource]
+script = ExtResource("1_jqfxs")
+export_file = false
+target_folder = ""
+fgd_name = "shake"
+base_fgd_files = Array[Resource]([ExtResource("1_w2g43")])
+entity_definitions = Array[Resource]([ExtResource("2_1di51")])
