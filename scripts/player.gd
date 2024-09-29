@@ -1,7 +1,11 @@
 extends CharacterBody3D
 
 @onready var shotgun = $head/cam/Shotgun
-@export var speed : float = 20
+
+@export var speed : float = 10.0
+@export var normal_speed : float = 10.0
+@export var bhop_speed : float =  12.5
+
 @onready var head = $head
 @onready var cam = $head/cam
 @onready var body = $body
@@ -12,6 +16,9 @@ extends CharacterBody3D
 @onready var username = $username
 @onready var crosshair = $head/cam/crosshair
 @onready var flashlight = $head/flashlight
+@onready var walking: AudioStreamPlayer3D = $walking
+@onready var l_killstreak: Label = $ui/ui/l_killstreak
+@onready var shotgun_cooldown: Timer = $shotgun_cooldown
 
 @export var kill_streak : int = 0
 
@@ -29,9 +36,15 @@ var jump_force : float = 15
 
 var mouse_sensitivity = 0.002 #0.0003456 
 
-var last_hit_id : int = 0
+var attacked_by_id : int = 0
+
+signal death_signal(id : int)
+
+
+
 
 @export var health : int = 100
+var shotgun_max_distance : float # is set to gun_ray length
 
 func _enter_tree():
 	set_multiplayer_authority(name.to_int())
@@ -45,28 +58,28 @@ func _ready():
 	origin_head_pos = head.position
 	origin_shotgun_pos = shotgun.position
 	health_bar.max_value = health
-	username.text = GameManager.username # later for multiplayer
+	username.text = GameManager.username
+	
+	shotgun_max_distance = gun_ray.target_position.z
 	
 	if team == "red":
 		username.modulate = Color.RED
 	elif team == "blue":
 		username.modulate = Color.DODGER_BLUE
+		
+	health_bar.position.y = get_viewport().size.y - (health_bar.size.y * 1.5)
+	floor_constant_speed = true
+	
 
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	
 
 	cam.make_current()
 	body.hide()
 	ui.show()
-	if get_parent().get_node(str(last_hit_id)) != null:
-		if get_parent().get_node(str(last_hit_id)).health <= 0:
-			print("killed")
-			network_add_killstreak(name.to_int(), 1)
-			network_add_killstreak.rpc(name.to_int(), 1)
-			last_kill = get_parent().get_node(str(last_hit_id)).username.text
-			KillFeed.add_kill_to_feed(username.text, last_kill, kill_streak)
-			KillFeed.add_kill_to_feed.rpc(username.text, last_kill, kill_streak)
+	username.hide()
 	
 	var dirx = Input.get_axis("move_left", "move_right")
 	var dirz = Input.get_axis("move_forward", "move_backward")
@@ -88,21 +101,40 @@ func _physics_process(delta):
 		
 	velocity.x = lerp(velocity.x, target_speed_x, 0.05)
 	velocity.z = lerp(velocity.z, target_speed_z, 0.05)
+	
+
+			
 	if !is_on_floor():
 		velocity.y -= gravity
-	
+		speed = bhop_speed
+		walking.stop()
+
 	if Input.is_action_pressed("jump") and is_on_floor():
 		velocity.y += jump_force 
 		
-	if Input.is_action_just_pressed('shoot'):
+	if Input.is_action_pressed('shoot') and shotgun_cooldown.time_left == 0:
+		var damage
+		shotgun_cooldown.start()
+		
 		if  gun_ray.get_collider() != null:
 			if gun_ray.get_collider().is_in_group('entity'):
 				var hit_peer_id = gun_ray.get_collider().name.to_int()
 				gun_ray.get_collider().take_damage(20)
+				
 			if gun_ray.get_collider().is_in_group("player"):
 				var hit_peer_id = gun_ray.get_collider().name.to_int()
-				take_damage(hit_peer_id, 20)
-				rpc("take_damage", hit_peer_id, 20)
+				var distance_to_peer = global_position.distance_to(get_parent().get_node(str(hit_peer_id)).global_position)
+				damage = calculate_damage(55, distance_to_peer , shotgun_max_distance)
+				print(str(damage))
+				
+				network_set_killer(hit_peer_id, name.to_int())
+				network_set_killer.rpc(hit_peer_id, name.to_int())
+				
+				take_damage(hit_peer_id, damage)
+				rpc("take_damage", hit_peer_id, damage)
+				
+				if get_parent().get_node(str(hit_peer_id)).health <= 0:
+					last_kill = hit_peer_id 
 				
 		aniplayer.stop()
 		aniplayer.play("shoot")
@@ -122,11 +154,22 @@ func _physics_process(delta):
 		
 	if target_speed_x == 0 and target_speed_z == 0:
 		time = 0
-		
+
+	if is_on_floor():
+		speed = normal_speed
+		if (velocity.x != 0.0 or velocity.z != 0.0) and walking.playing == false:
+			walking.play()
+		else:
+			walking.stop()
+
 	move_and_slide()
+	
+
 	
 	health_bar.value = health
 	GameManager.player_transform = transform
+	
+	l_killstreak.text = "Kill streak: " + str(kill_streak)
 	
 	#velocity_label.text = 'velocity: ' + str(velocity)
 	time += 0.02
@@ -142,6 +185,13 @@ func _unhandled_input(event):
 func death(id : int):
 	if get_parent().get_node(str(id)):
 		var peer = get_parent().get_node(str(id))
+		var killer = get_parent().get_node(str(peer.attacked_by_id))
+		peer.death_signal.emit(name.to_int())
+		
+		network_set_killstreak.rpc(killer.name.to_int(), killer.kill_streak + 1)
+		network_set_killstreak.rpc(peer.name.to_int(), 0)
+		
+		KillFeed.add_kill_to_feed.rpc(killer.username.text, peer.username.text, killer.kill_streak)
 		rpc("respawn", id)
 		respawn(id)
 		
@@ -157,6 +207,7 @@ func respawn(id : int):
 		
 		rpc("network_set_health", id, 120)
 		network_set_health(id, 120)
+		#TODO reset attacked_by_id
 
 
 @rpc("any_peer")
@@ -175,7 +226,16 @@ func network_set_health(id, value):
 		peer.health = value
 
 @rpc("any_peer")
-func network_add_killstreak(id, value):
+func network_set_killstreak(id, value):
 	if get_parent().get_node(str(id)):
 		var peer = get_parent().get_node(str(id))
-		peer.kill_streak += value
+		peer.kill_streak = value
+
+@rpc("any_peer")
+func network_set_killer(id, value):
+	var peer = get_parent().get_node(str(id))
+	peer.attacked_by_id = value
+
+func calculate_damage(x: float, d: float, m: float) -> float:
+	# Ensure that damage doesn't go negative
+	return sin(((m - d) / m) * (PI / 2)) * x # formel vom internet :P

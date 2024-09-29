@@ -150,6 +150,7 @@ _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("..")
 
 [node name="ui" type="Node2D" parent="."]
+scale = Vector2(1.66, 1.66)
 
 [node name="ui" type="Control" parent="ui"]
 layout_mode = 3
@@ -178,8 +179,16 @@ layout_mode = 0
 offset_left = 543.0
 offset_top = 541.0
 offset_right = 870.0
-offset_bottom = 611.0
+offset_bottom = 567.0
 placeholder_text = "Port"
+
+[node name="ip" type="TextEdit" parent="ui/ui"]
+layout_mode = 0
+offset_left = 543.373
+offset_top = 569.277
+offset_right = 870.373
+offset_bottom = 594.277
+placeholder_text = "ip"
 
 [node name="te_username" type="TextEdit" parent="ui/ui"]
 layout_mode = 0
@@ -235,8 +244,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 99.0567, 5.32695, 0)
 [node name="blue" type="Node3D" parent="spawn_points"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -92.9831, 5.14043, 0)
 
+[node name="preview_cam" type="Camera3D" parent="."]
+transform = Transform3D(0.632052, 0.344722, -0.694029, 0.00853476, 0.892457, 0.451053, 0.774879, -0.291012, 0.561137, -37.8913, 6.5568, 23.4898)
+
 [connection signal="pressed" from="ui/ui/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="ui/ui/host" to="." method="_on_host_pressed"]
 [connection signal="text_changed" from="ui/ui/TextEdit" to="." method="_on_text_edit_text_changed"]
+[connection signal="text_changed" from="ui/ui/ip" to="." method="_on_ip_text_changed"]
 [connection signal="text_changed" from="ui/ui/te_username" to="." method="_on_te_username_text_changed"]
 [connection signal="item_selected" from="ui/ui/OptionButton" to="." method="_on_option_button_item_selected"]

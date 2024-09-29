@@ -10,7 +10,7 @@
 script = ExtResource("1_icirn")
 
 [node name="killfeedwindow" type="RichTextLabel" parent="."]
-offset_right = 793.0
+offset_right = 1319.0
 offset_bottom = 87.0
 scale = Vector2(1.5, 1.5)
 mouse_filter = 2

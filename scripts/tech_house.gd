@@ -6,33 +6,41 @@ extends Node3D
 @onready var blue = $spawn_points/blue
 @onready var te_username = $ui/ui/te_username
 @onready var team_selection: OptionButton = $ui/ui/OptionButton
+@onready var ip: TextEdit = $ui/ui/ip
 
+var addresse : String = "dnhtrju.localto.net"
 
-var PORT : int = 9999
+var PORT : int = 5768
 var peer = ENetMultiplayerPeer.new()
 @export var player_scene: PackedScene
  
+func _ready() -> void:
+	peer.set_bind_ip(addresse)
+	
+	GameManager.create_teams()
+	GameManager.team_blue.spawn_point = blue.global_position
+	GameManager.team_red.spawn_point = red.global_position
+
 func _add_player(id = 1):
 	var player = player_scene.instantiate()
 	player.set_multiplayer_authority(id)
 	player.name = str(id)
 	call_deferred("add_child",player)
  
-func _ready():
-	GameManager.create_teams()
-	GameManager.team_blue.spawn_point = blue.global_position
-	GameManager.team_red.spawn_point = red.global_position
 
 func _on_join_pressed():
 	if team_selection.selected == -1:
+		KillFeed.add_text_local("choose a [color=orange]TEAM[/color] before connecting.")
 		return
-	peer.create_client("localhost", PORT)
+	peer.create_client(addresse, PORT)
 	multiplayer.multiplayer_peer = peer
 	ui.hide()
 
 func _on_host_pressed():
 	if team_selection.selected == -1:
+		KillFeed.add_text_local("choose a [color=orange]TEAM[/color] before connecting.")
 		return
+	
 	peer.create_server(PORT)
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_add_player)
@@ -53,3 +61,8 @@ func _on_option_button_item_selected(index: int) -> void:
 		GameManager.current_team = "blue"
 	elif index == 1:
 		GameManager.current_team = "red"
+
+
+func _on_ip_text_changed() -> void:
+	#peer.set_bind_ip(ip.text)
+	pass

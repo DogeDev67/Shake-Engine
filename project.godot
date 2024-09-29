@@ -27,7 +27,11 @@ KillFeed="*res://scenes/kill_feed.tscn"
 
 [display]
 
-window/stretch/mode="viewport"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/initial_position_type=0
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 
@@ -41,6 +45,10 @@ enabled=PackedStringArray("res://addons/qodot/plugin.cfg")
 
 player=""
 entity="killable enemies have this"
+
+[gui]
+
+theme/custom_font="res://assets/ascii-sector-16x16-tileset.ttf"
 
 [input]
 
@@ -108,3 +116,8 @@ screenshot={
 [physics]
 
 common/physics_ticks_per_second=240
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/screen_space_aa=1
