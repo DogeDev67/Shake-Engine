@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://b2o24ji4la50n"]
+[gd_scene load_steps=22 format=4 uid="uid://b2o24ji4la50n"]
 
 [ext_resource type="Script" path="res://addons/qodot/src/nodes/qodot_node3d.gd" id="1_3ayyq"]
 [ext_resource type="Script" path="res://scripts/tech_house.gd" id="1_si383"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://drvuuqs22hm08" path="res://textures/Metal/grid2.png" id="7_iby2j"]
 [ext_resource type="PackedScene" uid="uid://cynm6hh4vvv07" path="res://scenes/player.tscn" id="7_nks13"]
 [ext_resource type="Texture2D" uid="uid://ct7fuwte4wuxb" path="res://textures/water.png" id="8_cao0s"]
+[ext_resource type="Script" path="res://addons/Holepunch/holepunch_node.gd" id="12_iktxu"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8c8n3"]
 
@@ -108,7 +109,7 @@ tonemap_mode = 3
 sdfgi_enabled = true
 sdfgi_use_occlusion = true
 
-[node name="water_tech_house" type="Node3D"]
+[node name="water_tech_house" type="Node3D" groups=["multiplayer_map"]]
 script = ExtResource("1_si383")
 player_scene = ExtResource("7_nks13")
 
@@ -246,6 +247,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -92.9831, 5.14043, 0)
 
 [node name="preview_cam" type="Camera3D" parent="."]
 transform = Transform3D(0.632052, 0.344722, -0.694029, 0.00853476, 0.892457, 0.451053, 0.774879, -0.291012, 0.561137, -37.8913, 6.5568, 23.4898)
+
+[node name="HolePunch" type="Node" parent="."]
+script = ExtResource("12_iktxu")
+rendevouz_address = "25.57.74.251"
+rendevouz_port = 7680
 
 [connection signal="pressed" from="ui/ui/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="ui/ui/host" to="." method="_on_host_pressed"]

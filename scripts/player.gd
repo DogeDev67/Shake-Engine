@@ -5,6 +5,7 @@ extends CharacterBody3D
 @export var speed : float = 10.0
 @export var normal_speed : float = 10.0
 @export var bhop_speed : float =  12.5
+@onready var l_speed: Label = $ui/ui/l_speed
 
 @onready var head = $head
 @onready var cam = $head/cam
@@ -19,6 +20,7 @@ extends CharacterBody3D
 @onready var walking: AudioStreamPlayer3D = $walking
 @onready var l_killstreak: Label = $ui/ui/l_killstreak
 @onready var shotgun_cooldown: Timer = $shotgun_cooldown
+@onready var shooting: AudioStreamPlayer3D = $shooting
 
 @export var kill_streak : int = 0
 
@@ -40,6 +42,7 @@ var attacked_by_id : int = 0
 
 signal death_signal(id : int)
 
+var step_correction = 15
 
 
 
@@ -72,8 +75,9 @@ func _ready():
 	
 
 func _physics_process(delta):
-	if !is_multiplayer_authority():
-		return
+	if get_parent().is_in_group("multiplayer_map"):
+		if !is_multiplayer_authority():
+			return
 	
 
 	cam.make_current()
@@ -114,28 +118,27 @@ func _physics_process(delta):
 		
 	if Input.is_action_pressed('shoot') and shotgun_cooldown.time_left == 0:
 		var damage
+		shooting.play()
 		shotgun_cooldown.start()
 		
 		if  gun_ray.get_collider() != null:
 			if gun_ray.get_collider().is_in_group('entity'):
-				var hit_peer_id = gun_ray.get_collider().name.to_int()
-				gun_ray.get_collider().take_damage(20)
+				var distance_to_peer = global_position.distance_to(gun_ray.get_collider().global_position)
+				damage = calculate_damage(75, distance_to_peer , shotgun_max_distance)
+				gun_ray.get_collider().take_damage(damage)
 				
-			if gun_ray.get_collider().is_in_group("player"):
-				var hit_peer_id = gun_ray.get_collider().name.to_int()
-				var distance_to_peer = global_position.distance_to(get_parent().get_node(str(hit_peer_id)).global_position)
-				damage = calculate_damage(55, distance_to_peer , shotgun_max_distance)
-				print(str(damage))
+			if get_parent().is_in_group("multiplayer_map"):
+				if gun_ray.get_collider().is_in_group("player") and gun_ray.get_collider() != get_parent():
+					var hit_peer_id = gun_ray.get_collider().name.to_int()
+					var distance_to_peer = global_position.distance_to(get_parent().get_node(str(hit_peer_id)).global_position)
+					damage = calculate_damage(75, distance_to_peer , shotgun_max_distance)
+					print(str(damage))
 				
-				network_set_killer(hit_peer_id, name.to_int())
-				network_set_killer.rpc(hit_peer_id, name.to_int())
-				
-				take_damage(hit_peer_id, damage)
-				rpc("take_damage", hit_peer_id, damage)
-				
-				if get_parent().get_node(str(hit_peer_id)).health <= 0:
-					last_kill = hit_peer_id 
-				
+					network_set_killer(hit_peer_id, name.to_int())
+					network_set_killer.rpc(hit_peer_id, name.to_int())
+					
+					take_damage(hit_peer_id, damage)
+					rpc("take_damage", hit_peer_id, damage)
 		aniplayer.stop()
 		aniplayer.play("shoot")
 		
@@ -147,7 +150,7 @@ func _physics_process(delta):
 		
 		
 	if Input.is_action_just_pressed("flashlight_toggle"):
-		flashlight.visible = !flashlight.visble
+		flashlight.visible = !flashlight.visible
 		
 		
 		
@@ -155,12 +158,13 @@ func _physics_process(delta):
 	if target_speed_x == 0 and target_speed_z == 0:
 		time = 0
 
-	if is_on_floor():
+	if velocity.y == 0:
 		speed = normal_speed
-		if (velocity.x != 0.0 or velocity.z != 0.0) and walking.playing == false:
+		if velocity.floor() != Vector3.ZERO and walking.playing == false:
 			walking.play()
-		else:
-			walking.stop()
+		elif velocity.x > -step_correction and velocity.x < step_correction:
+			if velocity.z > -step_correction and velocity.z < step_correction:
+				walking.stop()
 
 	move_and_slide()
 	
@@ -169,6 +173,7 @@ func _physics_process(delta):
 	health_bar.value = health
 	GameManager.player_transform = transform
 	
+	l_speed.text = "Velocity: " + str(Vector3i(velocity))
 	l_killstreak.text = "Kill streak: " + str(kill_streak)
 	
 	#velocity_label.text = 'velocity: ' + str(velocity)
@@ -216,7 +221,7 @@ func take_damage(id : int, damage : int):
 		get_parent().get_node(str(id)).health -= damage
 		if get_parent().get_node(str(id)).health <= 0:
 			rpc("death", id)
-			death(id)
+			#death(id)
 			
 
 @rpc("any_peer")

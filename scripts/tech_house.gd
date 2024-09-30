@@ -8,10 +8,11 @@ extends Node3D
 @onready var team_selection: OptionButton = $ui/ui/OptionButton
 @onready var ip: TextEdit = $ui/ui/ip
 
-var addresse : String = "dnhtrju.localto.net"
+var addresse : String = "localhost"
 
 var PORT : int = 5768
 var peer = ENetMultiplayerPeer.new()
+var server = UDPServer.new()
 @export var player_scene: PackedScene
  
 func _ready() -> void:
@@ -32,7 +33,9 @@ func _on_join_pressed():
 	if team_selection.selected == -1:
 		KillFeed.add_text_local("choose a [color=orange]TEAM[/color] before connecting.")
 		return
+	
 	peer.create_client(addresse, PORT)
+	
 	multiplayer.multiplayer_peer = peer
 	ui.hide()
 
@@ -42,6 +45,7 @@ func _on_host_pressed():
 		return
 	
 	peer.create_server(PORT)
+	
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_add_player)
 	_add_player()

@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://cynm6hh4vvv07"]
+[gd_scene load_steps=14 format=3 uid="uid://cynm6hh4vvv07"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_k80me"]
 [ext_resource type="Texture2D" uid="uid://b12gx2e7v4it0" path="res://assets/crosshair.png" id="2_kk2td"]
 [ext_resource type="ArrayMesh" uid="uid://2814sfs68e7w" path="res://assets/models/shotgun/shotgun.obj" id="3_rpwyd"]
 [ext_resource type="Texture2D" uid="uid://cwx70gfcc6crw" path="res://assets/shot.png" id="4_36ums"]
-[ext_resource type="AudioStream" uid="uid://cc1pptnga8ghs" path="res://assets/sounds/walking.mp3" id="5_ibrmi"]
+[ext_resource type="AudioStream" uid="uid://cl0x04o1jguku" path="res://assets/sounds/walking.mp3" id="5_ibrmi"]
+[ext_resource type="AudioStream" uid="uid://bkmkw8qnm50la" path="res://assets/sounds/Shotgun.mp3" id="6_wd385"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_my2rg"]
 
@@ -110,6 +111,15 @@ properties/5/replication_mode = 1
 properties/6/path = NodePath("head/flashlight:visible")
 properties/6/spawn = true
 properties/6/replication_mode = 2
+properties/7/path = NodePath("walking:playing")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath("shooting:playing")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:rotation")
+properties/9/spawn = true
+properties/9/replication_mode = 1
 
 [node name="player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -144,10 +154,10 @@ texture = ExtResource("4_36ums")
 light_color = Color(1, 0.703962, 0.293268, 1)
 light_specular = 1.0
 shadow_enabled = true
-omni_range = 10.0
+omni_range = 2.0
 
 [node name="gun_ray" type="RayCast3D" parent="head/cam" groups=["player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.291749)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.177143)
 target_position = Vector3(0, 0, -40)
 collide_with_areas = true
 debug_shape_custom_color = Color(0.597176, 0.597176, 0.597176, 1)
@@ -173,7 +183,6 @@ libraries = {
 speed_scale = 0.7
 
 [node name="ui" type="Node2D" parent="."]
-visible = false
 
 [node name="ui" type="Control" parent="ui"]
 layout_mode = 3
@@ -214,6 +223,13 @@ theme_override_font_sizes/font_size = 32
 text = "Kill streak: 0"
 horizontal_alignment = 2
 
+[node name="l_speed" type="Label" parent="ui/ui"]
+layout_mode = 0
+offset_left = 1487.0
+offset_right = 2692.0
+offset_bottom = 16.0
+text = "Velocity:"
+
 [node name="username" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35746, 0)
 pixel_size = 0.015
@@ -224,12 +240,16 @@ text = "DogeDev gaming"
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vb4l")
 
-[node name="walking" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("5_ibrmi")
-volume_db = -32.0
-unit_size = 25.22
-pitch_scale = 1.86
-
 [node name="shotgun_cooldown" type="Timer" parent="."]
 wait_time = 0.7
 one_shot = true
+
+[node name="walking" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+stream = ExtResource("5_ibrmi")
+volume_db = -32.0
+unit_size = 40.22
+pitch_scale = 1.86
+
+[node name="shooting" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_wd385")
