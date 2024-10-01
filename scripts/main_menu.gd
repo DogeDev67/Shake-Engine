@@ -19,3 +19,7 @@ func _on_singleplayer_pressed():
 
 func _on_multiplayer_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/tech_house.tscn")
+
+
+func _on_settings_pressed() -> void:
+	Settings.show_settings(Vector2i(600, 400))

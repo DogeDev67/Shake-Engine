@@ -1,13 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://cd6pwha5qjedc"]
+[gd_scene load_steps=6 format=3 uid="uid://cd6pwha5qjedc"]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_08hr3"]
 [ext_resource type="Texture2D" uid="uid://bq8salb1db6f" path="res://assets/shake_logo.png" id="2_x6sgm"]
-[ext_resource type="PackedScene" uid="uid://bx5hgspp6dlod" path="res://scenes/map_selection_button.tscn" id="3_muu50"]
-[ext_resource type="Texture2D" uid="uid://d1ghhfnecjtp4" path="res://assets/previews/sb_sandbox_preview.png" id="4_4f6p8"]
-[ext_resource type="PackedScene" uid="uid://dbu7ob7q77me" path="res://maps/sandbox/scenes/sb_sandbox.tscn" id="4_khxpu"]
-[ext_resource type="Texture2D" uid="uid://cc23o0eq1fbgw" path="res://assets/previews/sb_tunnel_preview.png" id="6_6i0kc"]
-[ext_resource type="PackedScene" uid="uid://bda78qyeyxgq0" path="res://maps/sandbox/scenes/sb_tunnel.tscn" id="6_agl7y"]
-[ext_resource type="PackedScene" uid="uid://co7xlpo2u6pqv" path="res://scenes/castle_1.tscn" id="8_2855v"]
+[ext_resource type="AudioStream" uid="uid://cv0xwryhh7qmt" path="res://assets/music/main_menu.mp3" id="3_admle"]
 
 [sub_resource type="Animation" id="Animation_0g2hh"]
 resource_name = "text_pulse"
@@ -75,14 +70,13 @@ offset_right = 709.0
 offset_bottom = 418.0
 text = "Multiplayer"
 
-[node name="Label" type="Label" parent="menu/multiplayer"]
-layout_mode = 0
-offset_left = 319.0
-offset_top = -98.0
-offset_right = 596.0
-offset_bottom = -64.0
-theme_override_font_sizes/font_size = 24
-text = "← coming soon"
+[node name="settings" type="Button" parent="menu"]
+offset_left = 406.0
+offset_top = 462.843
+offset_right = 709.0
+offset_bottom = 528.843
+text = "Settings
+"
 
 [node name="title_text" type="Label" parent="menu"]
 self_modulate = Color(1, 1, 0.376471, 1)
@@ -98,6 +92,14 @@ text = "Not Quake!
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="l_engine" type="Label" parent="menu"]
+layout_mode = 0
+offset_left = 257.831
+offset_top = 162.651
+offset_right = 353.831
+offset_bottom = 178.651
+text = "Engine v0.1"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -124,31 +126,9 @@ grow_vertical = 2
 
 [node name="levels" type="Node2D" parent="level_selection"]
 
-[node name="sb_sandbox" parent="level_selection/levels" instance=ExtResource("3_muu50")]
-offset_left = 46.0
-offset_top = 33.0
-offset_right = 302.0
-offset_bottom = 225.0
-icon = ExtResource("4_4f6p8")
-map_scene = ExtResource("4_khxpu")
-map_name = "sb_sandbox"
-
-[node name="map_selection_button" parent="level_selection/levels" instance=ExtResource("3_muu50")]
-offset_left = 347.0
-offset_top = 33.0
-offset_right = 611.0
-offset_bottom = 233.0
-icon = ExtResource("6_6i0kc")
-map_scene = ExtResource("6_agl7y")
-map_name = "sb_tunnel"
-
-[node name="map_selection_button2" parent="level_selection/levels" instance=ExtResource("3_muu50")]
-offset_left = 651.0
-offset_top = 33.0
-offset_right = 915.0
-offset_bottom = 233.0
-map_scene = ExtResource("8_2855v")
-map_name = "st_castle"
+[node name="bg_theme" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_admle")
 
 [connection signal="pressed" from="menu/singleplayer" to="." method="_on_singleplayer_pressed"]
 [connection signal="pressed" from="menu/multiplayer" to="." method="_on_multiplayer_pressed"]
+[connection signal="pressed" from="menu/settings" to="." method="_on_settings_pressed"]

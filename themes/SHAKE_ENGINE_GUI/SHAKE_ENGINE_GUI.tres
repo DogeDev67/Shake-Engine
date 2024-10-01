@@ -1,0 +1,22 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bgesf4ddovn0p"]
+
+[ext_resource type="Texture2D" uid="uid://cey3lh5ei1ccl" path="res://assets/sprites/SHAKE_ENGINE_GUI/slider.png" id="1_i3k3m"]
+[ext_resource type="FontFile" uid="uid://omx2jyov310h" path="res://assets/fonts/Silver.ttf" id="1_ysiqx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_40exy"]
+bg_color = Color(0.180005, 0.180005, 0.180005, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly4f1"]
+bg_color = Color(0.129558, 0.129559, 0.129558, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4b4lb"]
+
+[resource]
+default_font = ExtResource("1_ysiqx")
+default_font_size = 38
+/styles/panel = SubResource("StyleBoxFlat_40exy")
+HSlider/colors/slider = Color(1, 0.6, 0, 1)
+HSlider/icons/grabber = ExtResource("1_i3k3m")
+HSlider/icons/grabber_highlight = ExtResource("1_i3k3m")
+Panel/styles/panel = SubResource("StyleBoxFlat_ly4f1")
+TabContainer/styles/tab_focus = SubResource("StyleBoxEmpty_4b4lb")
